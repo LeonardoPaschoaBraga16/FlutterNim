@@ -10,6 +10,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController _numeroPalitos = TextEditingController();
   final TextEditingController _numeroMaxPalitos = TextEditingController();
+  final valor = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +61,7 @@ class _HomeState extends State<Home> {
             TextButton(onPressed: () {}, child: Text("Como jogar"), style: TextButton.styleFrom(
               backgroundColor: Colors.blue, foregroundColor: Colors.black))
           ]),
+          Text("$valor")
         ],
       ),
     );
