@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -58,7 +60,14 @@ class _HomeState extends State<Home> {
             TextButton(onPressed: () {}, child:  Text("Iniciar Jogo"), style: TextButton.styleFrom(
               backgroundColor: Colors.blue, foregroundColor: Colors.black,)),
             const SizedBox(width: 25.0),
-            TextButton(onPressed: () {}, child: Text("Como jogar"), style: TextButton.styleFrom(
+            TextButton(onPressed: () async {
+              Uri teste = Uri.parse('https://jogoseeducacao.ime.ufg.br/p/2135-nim');  // Substitua pelo URL desejado
+              if (await canLaunchUrl(teste)) {
+                await launchUrl(teste);
+              } else {
+                throw 'Não foi possível abrir o link: $teste';
+              }
+            }, child: Text("Como jogar"), style: TextButton.styleFrom(
               backgroundColor: Colors.blue, foregroundColor: Colors.black))
           ]),
           Text("$valor")
