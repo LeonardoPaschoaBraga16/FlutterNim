@@ -19,9 +19,9 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       home: Scaffold(
         appBar: AppBar(
-          title: const Row(
+          title: const Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [Text("FlutterNim"), Text("Leonardo Paschoa Braga"), Text("RA: 1431432312005")],
+            children: [Text("FlutterNim", style: TextStyle(fontSize: 15),), SizedBox(height: 1.0), Text("Leonardo Paschoa Braga", style: TextStyle(fontSize: 15),), SizedBox(height: 1.0), Text("RA: 1431432312005", style: TextStyle(fontSize: 15),)],
           ),
           backgroundColor: Colors.deepOrange,
         ),

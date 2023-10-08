@@ -12,7 +12,7 @@ int numeroMaxPalitos = int.parse(_numeroMaxPalitos.text.trim());
 int numeroPalitos = int.parse(_numeroPalitos.text.trim());
 int lastPieces = numeroPalitos % (numeroMaxPalitos + 1);
 int piecesEx = 0;
-
+String winner = "";
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -22,23 +22,58 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   void jogador() {
     setState(() {
       numeroRetira = int.parse(_numeroRetira.text);
+      if (numeroRetira > numeroMaxPalitos ||
+          numeroRetira == 0 ||
+          numeroPalitos == 0) {
+        return;
+      }
       numeroPalitos = numeroPalitos - numeroRetira;
       Navigator.of(context).pop();
+      if (numeroPalitos <= 0) {
+        winner = "Computador";
+        if (numeroPalitos < 0){
+        numeroPalitos = 0;
+        }
+      }
     });
   }
 
   void maquina() {
-    setState(() {
-      if (lastPieces == 0 || lastPieces == 1) {
-      piecesEx = max(1, numeroMaxPalitos);
-      numeroPalitos = numeroPalitos - piecesEx;
+  setState(() {
+    if (numeroPalitos % (numeroMaxPalitos + 1) == 0) {
+      // Se o número de palitos é um múltiplo de (numeroMaxPalitos + 1),
+      // o robô retira uma quantidade aleatória de palitos, mas nunca zero.
+      piecesEx = Random().nextInt(numeroMaxPalitos) + 1;
+    } else {
+      // Se não é um múltiplo, o robô retira uma quantidade para torná-lo um múltiplo.
+      int remainder = numeroPalitos % (numeroMaxPalitos + 1);
+      piecesEx = numeroMaxPalitos - remainder;
     }
-    });
-  }
+
+    // Atualiza o número de palitos restantes.
+    numeroPalitos -= piecesEx;
+
+    // Garante que o robô nunca tire zero palitos.
+    if (piecesEx == 0) {
+      piecesEx = 1;
+      numeroPalitos -= 1;
+    }
+
+    if (numeroPalitos - numeroMaxPalitos == 0){
+      piecesEx = numeroMaxPalitos - 1;
+    }
+
+    if (numeroPalitos <= 0) {
+      winner = "Usuário";  // Atualizado para "Usuário" pois o robô sempre ganha
+      numeroPalitos = 0;
+    }
+  });
+}
+
+
 
   void modal() {
     String hintText = "Limite é de $numeroMaxPalitos";
@@ -71,13 +106,19 @@ class _HomeState extends State<Home> {
                   TextButton(
                     onPressed: () {
                       jogador();
+                      if (numeroRetira > numeroMaxPalitos ||
+                          numeroRetira == 0 ||
+                          numeroPalitos == 0) {
+                        return;
+                      }
                       maquina();
-
+                      modal();
                     },
                     child: const Text("Retirar"),
                   ),
                 ],
-              )
+              ),
+              Text("E o vencedor é o: $winner")
             ],
           ),
           actions: <Widget>[
@@ -92,12 +133,19 @@ class _HomeState extends State<Home> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: [
-          const Text("Bem Vindo ao Jogo Nim! Vamos jogar?"),
+          const SizedBox(height: 25.0),
+          const Row(
+            children: [
+              Text("Bem Vindo ao Jogo Nim! Vamos jogar?"),
+            ],
+          ),
+          const SizedBox(height: 5.0),
           Row(
             children: [
               SizedBox(
@@ -115,7 +163,7 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(width: 25.0),
               const SizedBox(
-                width: 300,
+                width: 130,
                 child: Text("Numero Maximo de Palitos"),
               ),
             ],
@@ -136,7 +184,7 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(width: 25.0),
             const SizedBox(
-              width: 300,
+              width: 130,
               child: Text("Palitos Maximos a Serem Retirados"),
             ),
           ]),
@@ -149,7 +197,7 @@ class _HomeState extends State<Home> {
 
                   if (numeroPalitosStr.isEmpty || numeroMaxPalitosStr.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content:
                             Text('Preencha os campos antes de iniciar o jogo.'),
                       ),
